@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>User Registration</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #74ABE2, #5563DE);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 15px;
+            font-weight: 600;
+            color: #555;
+        }
+        input {
+            padding: 12px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        input:focus {
+            border-color: #5563DE;
+            outline: none;
+            box-shadow: 0 0 5px rgba(85, 99, 222, 0.5);
+        }
+        button {
+            margin-top: 25px;
+            padding: 14px;
+            background: linear-gradient(45deg, #5563DE, #74ABE2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: linear-gradient(45deg, #74ABE2, #5563DE);
+        }
+        .view-button {
+            background: #28a745;
+            margin-top: 10px;
+        }
+        .view-button:hover {
+            background: #218838;
+        }
+        .message {
+            text-align: center;
+            margin-bottom: 15px;
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>User Registration</h2>
+        <div id="message" class="message"></div>
+        <form id="userForm">
+            <label>Name:</label>
+            <input type="text" name="name" placeholder="Enter name" required>
+
+            <label>Email:</label>
+            <input type="email" name="email" placeholder="Enter email" required>
+
+            <label>Password:</label>
+            <input type="password" name="password" placeholder="Enter password" required>
+
+            <button type="submit">Submit</button>
+        </form>
+        <form action="/users" method="GET">
+            <button type="submit" class="view-button">View Users</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('userForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const data = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                password: formData.get('password')
+            };
+
+            fetch('/add-user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.text())
+            .then(message => {
+                document.getElementById('message').innerText = message;
+                this.reset();
+            })
+            .catch(error => {
+                document.getElementById('message').innerText = 'Error submitting user.';
+                console.error(error);
+            });
+        });
+    </script>
+</body>
+</html>
